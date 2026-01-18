@@ -1,10 +1,10 @@
-# Secure-IAM-Controller 🔐
+# Secure-IAM-Controller 
 
 A Java-based **Identity and Access Management (IAM) Simulator** with **Role-Based Access Control (RBAC)**.
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This project is a functional security dashboard designed to simulate enterprise-grade user provisioning and access control. Built with **Java** and the **Swing** framework, it demonstrates the implementation of the **Principle of Least Privilege (PoLP)** and **stateful session management**.
 
@@ -12,7 +12,7 @@ The application provides a **Security Controller** interface where administrator
 
 ---
 
-## 🛡️ Key Security Features
+##  Key Security Features
 
 * **Role-Based Access Control (RBAC)**
   Users are assigned specific roles (Admin, User) that determine their permissions within the system.
@@ -28,7 +28,7 @@ The application provides a **Security Controller** interface where administrator
 
 ---
 
-## 💻 Technical Stack
+##  Technical Stack
 
 | Component       | Details                                                       |
 | --------------- | ------------------------------------------------------------- |
@@ -39,7 +39,7 @@ The application provides a **Security Controller** interface where administrator
 
 ---
 
-## 🚀 How It Works
+##  How It Works
 
 * **Initial Access**
   The system boots with a default admin identity.

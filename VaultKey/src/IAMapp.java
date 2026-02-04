@@ -1,23 +1,32 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+// User class to store user information
+class User {
+    String username;
+    String role;
+    
+    User(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
+}
 
 public class IAMapp extends JFrame {
 
     private JTextField usernameField, roleField;
     private JTextArea auditLogArea;
-    private Map<String, String> userDatabase;
+    private ArrayList<User> userDatabase;
     private String currentUser = null; // Tracks who is logged in
 
     public IAMapp() {
-        userDatabase = new HashMap<>();
+        userDatabase = new ArrayList<>();
         // Pre-load a default Admin
-        userDatabase.put("admin", "admin");
+        userDatabase.add(new User("admin", "admin"));
 
         setTitle("CyberVault IAM - Security Controller");
         setSize(800, 600);
@@ -85,7 +94,8 @@ public class IAMapp extends JFrame {
 
         loginBtn.addActionListener(e -> {
             String user = usernameField.getText().trim();
-            if (userDatabase.containsKey(user)) {
+            User foundUser = findUser(user);
+            if (foundUser != null) {
                 currentUser = user;
                 logAction("SUCCESS: User '" + user + "' authenticated and session started.");
                 JOptionPane.showMessageDialog(this, "Logged in as: " + user);
@@ -101,18 +111,26 @@ public class IAMapp extends JFrame {
             String newUser = usernameField.getText().trim();
             String newRole = roleField.getText().trim().toLowerCase();
             if (!newUser.isEmpty()) {
-                userDatabase.put(newUser, newRole);
+                // Check if user already exists
+                if (findUser(newUser) != null) {
+                    logAction("WARNING: Attempted to create duplicate user '" + newUser + "'.");
+                    JOptionPane.showMessageDialog(this, "User already exists.");
+                    return;
+                }
+                userDatabase.add(new User(newUser, newRole));
                 logAction("PROVISION: Admin created new identity '" + newUser + "' with role '" + newRole + "'.");
+                JOptionPane.showMessageDialog(this, "User '" + newUser + "' created successfully.");
             }
         });
 
         accessBtn.addActionListener(e -> {
             if (currentUser == null) {
                 logAction("WARNING: Unauthenticated resource access attempt.");
+                JOptionPane.showMessageDialog(this, "Please login first.");
                 return;
             }
-            String role = userDatabase.get(currentUser);
-            if ("admin".equals(role)) {
+            User user = findUser(currentUser);
+            if (user != null && "admin".equals(user.role)) {
                 logAction("ACCESS GRANTED: User '" + currentUser + "' accessed Root Directory.");
                 JOptionPane.showMessageDialog(this, "Access Granted: Root System Files.");
             } else {
@@ -124,9 +142,26 @@ public class IAMapp extends JFrame {
         setVisible(true);
     }
 
+    // Helper method to find a user in the ArrayList
+    private User findUser(String username) {
+        for (User u : userDatabase) {
+            if (u.username.equals(username)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
     private boolean checkAdminPrivilege() {
-        if (currentUser == null || !"admin".equals(userDatabase.get(currentUser))) {
-            logAction("SECURITY ALERT: Privilege Escalation attempt by '" + (currentUser == null ? "Anonymous" : currentUser) + "'.");
+        if (currentUser == null) {
+            logAction("SECURITY ALERT: Privilege Escalation attempt by Anonymous user.");
+            JOptionPane.showMessageDialog(this, "Unauthorized: Admin privileges required.");
+            return false;
+        }
+        
+        User user = findUser(currentUser);
+        if (user == null || !"admin".equals(user.role)) {
+            logAction("SECURITY ALERT: Privilege Escalation attempt by '" + currentUser + "'.");
             JOptionPane.showMessageDialog(this, "Unauthorized: Admin privileges required.");
             return false;
         }

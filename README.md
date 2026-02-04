@@ -155,26 +155,6 @@ This project demonstrates practical understanding of:
 
 ---
 
-## Future Enhancements
-
-Potential improvements for extended functionality:
-
-- [ ] Password hashing and secure credential storage
-- [ ] Multi-factor authentication (MFA)
-- [ ] Encrypted audit log export to JSON/CSV
-- [ ] Advanced permission granularity (Read/Write/Execute)
-- [ ] User account lifecycle management (disable/delete)
-- [ ] Integration with external authentication providers (LDAP/OAuth)
-- [ ] Database persistence instead of in-memory storage
-
----
-
-## License
-
-This project is for educational and portfolio demonstration purposes.
-
----
-
 ## Author
 
 **David Hanna**  
